@@ -1,0 +1,72 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script type="text/javascript">$(window).on('load', function () {
+        var $preloader = $('#p_prldr'),
+            $svg_anm = $preloader.find('.svg_anm');
+        $svg_anm.fadeOut();
+        $preloader.delay(500).fadeOut('slow');
+    });</script>
+    <title>Поисковик документов</title>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script>
+        async function get_info() {
+            alert("Идет поиск... Нажмите OK и ожидайте");
+            let name = document.getElementById('name_file').value;
+            let count = document.getElementById("myRange").value;
+            let value = await eel.wrapper(name, count)()
+
+            var div1 = document.getElementById('info');
+            for (let i = 0; i < Object.keys(value).length; i++) {
+                let name_file = Object.values(value)[i][0];
+                div1.insertAdjacentHTML('afterend', `<ul>
+            <li>
+        <a align="center" target="_blank" href= '${Object.keys(value)[i]}'>'${name_file.toString()}' - '${Object.values(value)[i][1]}' - '${Object.values(value)[i][2]}'  <br></li></ul></a>`);
+            }
+            alert("=>Successful<=");
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+
+<input size="25px" id="name_file" type="text" placeholder="Введите искомый документ" required="">
+<button class="btn" onclick="get_info()">Найти документ</button>
+
+<script>
+    (function () {
+        document.querySelector('input').addEventListener('keydown', function (e) {
+            if (e.keyCode === 13) {
+                get_info();
+            }
+        });
+    })();</script>
+
+<input type="range" min="1" max="1000" value="50" class="slider" id="myRange">
+<a> Количество = <span id="demo"></span></a>
+
+
+<script>
+    var slider = document.getElementById("myRange");
+    var output = document.getElementById("demo");
+    output.innerHTML = slider.value;
+
+    slider.oninput = function () {
+        output.innerHTML = this.value;
+    }
+</script>
+
+<div id="p_prldr">
+    <div class="contpre"><span class="svg_anm"></span><br>Подождите<br><small>идет загрузка</small></div>
+</div>
+<div id="info" class="nn" style="color:#ff0099; font-size:30px">
+    <p>
+    <h1>Hi! Вас приветствует поиск документов:-)</h1></p>
+
+</div>
+
+</body>
+<html>
+
