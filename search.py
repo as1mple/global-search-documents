@@ -3,7 +3,7 @@ import datetime
 import requests
 
 
-def get_setting() -> list:
+def get_setting() -> list:  # Получение версиии, токена и прокси для создания запроса
     with open("setting.txt", "r") as fl:
         setting = fl.readlines()
     version = setting[0].replace("version=", "".replace("\n", ""))
@@ -20,7 +20,7 @@ def get_doc(search, count) -> dict:
     URL = "https://api.vk.com/method/docs.search?"
     while True:
         try:
-            response = requests.get(URL,
+            response = requests.get(URL,  # Построение запроса
                                     timeout=5,
                                     params={
                                         "access_token": token,

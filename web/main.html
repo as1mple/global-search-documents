@@ -12,29 +12,21 @@
     <script>
         async function get_info() {
             alert("Идет поиск... Нажмите OK и ожидайте");
-            let name = document.getElementById('name_file').value;
-            let count = document.getElementById("myRange").value;
-            let value = await eel.wrapper(name, count)()
-
-            var div1 = document.getElementById('info');
+            let result = await eel.wrapper(document.getElementById('name_file').value, document.getElementById("myRange").value)();
+            let value = Object.values(result)
             for (let i = 0; i < Object.keys(value).length; i++) {
-                let name_file = Object.values(value)[i][0];
-                div1.insertAdjacentHTML('afterend', `<ul>
+                document.getElementById('info').insertAdjacentHTML('afterend', `<ul>
             <li>
-        <a align="center" target="_blank" href= '${Object.keys(value)[i]}'>'${name_file.toString()}' - '${Object.values(value)[i][1]}' - '${Object.values(value)[i][2]}'  <br></li></ul></a>`);
+        <a align="center" target="_blank" href= '${Object.keys(result)[i]}'>'${value[i][0]}' - '${value[i][1]}' - '${value[i][2]}'  <br></li></ul></a>`);
             }
             alert("=>Successful<=");
         }
     </script>
     <link rel="stylesheet" href="style.css">
-
 </head>
 <body>
-
-
 <input size="25px" id="name_file" type="text" placeholder="Введите искомый документ" required="">
 <button class="btn" onclick="get_info()">Найти документ</button>
-
 <script>
     (function () {
         document.querySelector('input').addEventListener('keydown', function (e) {
@@ -43,30 +35,23 @@
             }
         });
     })();</script>
-
 <input type="range" min="1" max="1000" value="50" class="slider" id="myRange">
 <a> Количество = <span id="demo"></span></a>
-
-
 <script>
     var slider = document.getElementById("myRange");
     var output = document.getElementById("demo");
     output.innerHTML = slider.value;
-
     slider.oninput = function () {
         output.innerHTML = this.value;
     }
 </script>
-
 <div id="p_prldr">
     <div class="contpre"><span class="svg_anm"></span><br>Подождите<br><small>идет загрузка</small></div>
 </div>
 <div id="info" class="nn" style="color:#ff0099; font-size:30px">
     <p>
     <h1>Hi! Вас приветствует поиск документов:-)</h1></p>
-
 </div>
-
 </body>
-<html>
+</html>
 
