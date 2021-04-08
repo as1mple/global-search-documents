@@ -1,13 +1,15 @@
 input {
 
-    width: 70em;
+    width: 59em;
     /*background-color: #00da2f;*/
     color: #40084a;
     text-shadow: 5px 10px 18px black;
+    /*padding: 10px;*/
     letter-spacing: 5px;
     font-family: -webkit-pictograph;
     text-align: center;
 }
+
 
 div {
     text-shadow: 5px 10px 18px black;
