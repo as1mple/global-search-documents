@@ -30,7 +30,7 @@ def get_doc(search, count) -> dict:
                                         "count": count,
                                         "return_tags": return_targs,
                                         "v": version},
-                                    proxies={"https": proxy},
+                                    proxies={"https": f"https://{proxy}"},
                                     verify=False
                                     )
             print("Successful")
