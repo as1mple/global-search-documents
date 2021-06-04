@@ -65,14 +65,10 @@ def get_doc(search: str, count: str) -> dict:
 
     try:
         vk = Vk(**data)
-
-        for i in np.arange(len(vk.response.items) - 1, -1, -1):
-            title = vk.response.items[i].title
-            date = vk.response.items[i].date
-            time = datetime.datetime.fromtimestamp(date).strftime('%Y-%m-%d %H:%M:%S')
-            size = vk.response.items[i].size / 1_000_000
-            url = vk.response.items[i].url
-            result.update({url: [title, size, time]})
+        [result.update({vk.response.items[i].url: [vk.response.items[i].title, vk.response.items[i].size / 1_000_000,
+                                                   datetime.datetime.fromtimestamp(vk.response.items[i].date).strftime(
+                                                       '%Y-%m-%d %H:%M:%S')]})
+         for i in np.arange(len(vk.response.items) - 1, -1, -1)]
     except ValidationError as e:
         pprint(e.json())
     print("-" * 128)
