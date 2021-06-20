@@ -44,12 +44,12 @@ def get_doc(search: str, count: str) -> dict:
     result = dict()
 
     session = requests.Session()
-    retry = Retry(connect=10)
+    retry = Retry(connect=3)
     adapter = HTTPAdapter(max_retries=retry)
     session.mount('https://', adapter)
     try:
         response = session.get(URL,
-                               timeout=2,
+                               timeout=5,
                                params={
                                    "access_token": token,
                                    "q": search,
@@ -72,7 +72,8 @@ def get_doc(search: str, count: str) -> dict:
                                                    datetime.datetime.fromtimestamp(vk.response.items[i].date).strftime(
                                                        '%Y-%m-%d %H:%M:%S')]})
          for i in np.arange(len(vk.response.items) - 1, -1, -1)]
+        logger.info("=> D O N E <=")
+        return result
+
     except ValidationError as e:
         logger.error(e.json())
-    logger.info("=> D O N E <=")
-    return result
