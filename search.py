@@ -1,10 +1,15 @@
+import urllib3
 import datetime
 import requests
 from typing import List
-from pprint import pprint
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 import numpy as np
+from loguru import logger
 from pydantic import BaseModel, ValidationError
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class Items(BaseModel):
@@ -34,32 +39,30 @@ def get_setting() -> list:
 
 def get_doc(search: str, count: str) -> dict:
     version, token, proxy = get_setting()
-    search_own = "0"
-    return_targs = "1"
-    result = {}
-    iteration = 0
+    search_own, return_targs = 0, 1
     URL = "https://api.vk.com/method/docs.search?"
-    while True:
-        try:
-            response = requests.get(URL,
-                                    timeout=3,
-                                    params={
-                                        "access_token": token,
-                                        "q": search,
-                                        "search_own": search_own,
-                                        "count": count,
-                                        "return_tags": return_targs,
-                                        "v": version},
-                                    proxies={"https": f"https://{proxy}"},
-                                    verify=False
-                                    )
-            print("Successful")
-            break
-        except Exception as e:
-            iteration += 1
-            print("error", e[:10])
-            if iteration == 5:
-                return {'result': "404"}
+    result = dict()
+
+    session = requests.Session()
+    retry = Retry(connect=10)
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount('https://', adapter)
+    try:
+        response = session.get(URL,
+                               timeout=2,
+                               params={
+                                   "access_token": token,
+                                   "q": search,
+                                   "search_own": search_own,
+                                   "count": count,
+                                   "return_tags": return_targs,
+                                   "v": version},
+                               proxies={"https": f"https://{proxy}"},
+                               verify=False
+                               )
+    except Exception as e:
+        logger.error(e)
+        return {'result': "404"}
 
     data = response.json()
 
@@ -70,6 +73,6 @@ def get_doc(search: str, count: str) -> dict:
                                                        '%Y-%m-%d %H:%M:%S')]})
          for i in np.arange(len(vk.response.items) - 1, -1, -1)]
     except ValidationError as e:
-        pprint(e.json())
-    print("-" * 128)
+        logger.error(e.json())
+    logger.info("=> D O N E <=")
     return result
