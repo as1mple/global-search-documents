@@ -12,10 +12,9 @@
 
     <script>
         async function save_proxy() {
-            alert("Новый прокси вступил в силу");
             let new_proxy = document.getElementById('new_proxy').value;
-
-            await eel.save_proxy(new_proxy)()
+            let status_proxy = await eel.save_proxy(new_proxy)()
+            alert(status_proxy ? "Новый прокси вступил в силу" : "Невалидный прокси");
         }
 
         async function get_info() {
@@ -23,15 +22,16 @@
             let name = document.getElementById('name_file').value;
             let count = document.getElementById("myRange").value;
             let value = await eel.wrapper(name, count)()
-
             var div1 = document.getElementById('info');
-            for (let i = 0; i < Object.keys(value).length; i++) {
-                let name_file = Object.values(value)[i][0];
-                div1.insertAdjacentHTML('afterend', `<ul>
-            <li>
-        <a align="center" target="_blank" href= '${Object.keys(value)[i]}'>'${name_file.toString()}' - '${Object.values(value)[i][1]}' - '${Object.values(value)[i][2]}'  <br></li></ul></a>`);
+            if (Object.keys(value).length > 1 || !(Object.values(value)[0] === "404")) {
+                for (let i = 0; i < Object.keys(value).length; i++) {
+                    let name_file = Object.values(value)[i][0];
+                    div1.insertAdjacentHTML('afterend', `<ul>
+                <li>
+            <a align="center" target="_blank" href= '${Object.keys(value)[i]}'>'${name_file.toString()}' - '${Object.values(value)[i][1]}' - '${Object.values(value)[i][2]}'  <br></li></ul></a>`);
+                }
             }
-            alert("=>Successful<=");
+            alert(Object.values(value)[0] === "404" ? 'Не удалось найти, попробуйте еще раз' : 'Что-то да нашлось :-)');
         }
     </script>
 
